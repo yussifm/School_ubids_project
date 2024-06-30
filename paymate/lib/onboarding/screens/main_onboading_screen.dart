@@ -1,9 +1,6 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
-import 'package:gif_view/gif_view.dart';
 
 import 'package:paymate/apptheme/colors/colors_app.dart';
 import 'package:paymate/auth/screen/login_screen.dart';
