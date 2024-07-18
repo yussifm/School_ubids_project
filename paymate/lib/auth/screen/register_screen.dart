@@ -5,8 +5,10 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:paymate/Widgets/common_input.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
 import 'package:paymate/auth/screen/login_screen.dart';
+import 'package:paymate/bottom_nav.dart';
 import 'package:paymate/helpers/loader.dart';
 import 'package:paymate/helpers/validater.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../helpers/toast_.dart';
 
@@ -506,6 +508,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     //             'Please agree to the terms and conditions');
                                     //   }
                                     // }
+
+                                    pushScreen(context,
+                                        screen: const BottomNav());
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(

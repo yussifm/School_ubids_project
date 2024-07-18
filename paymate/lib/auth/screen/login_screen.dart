@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
 import 'package:paymate/auth/screen/register_screen.dart';
+import 'package:paymate/bottom_nav.dart';
 import 'package:paymate/helpers/loader.dart';
 import 'package:paymate/helpers/validater.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import 'forgot_password_scrren.dart';
 
@@ -38,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -202,7 +203,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: textFieldLabelTextColor,
                               ),
                             ),
-                         
                             initialCountryCode: _initialCountryCode,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly
@@ -347,7 +347,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                      const SizedBox(height: 100,),
+                        const SizedBox(
+                          height: 100,
+                        ),
 
                         _isLoading
                             ? Expanded(
@@ -359,9 +361,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 highlightColor: Colors.transparent,
                                 onTap: () async {
                                   // if (_formKey.currentState!.validate()) {
-                                   
+
                                   //  // TODO: Add login functionality
                                   // }
+                                  pushScreen(context,
+                                      screen: const BottomNav());
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -462,8 +466,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-   
-   
     );
   }
 }
