@@ -23,7 +23,7 @@ class _BottomNavState extends State<BottomNav> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    setStatusBarColor(kPrimaryColor, Brightness.light);
+    setStatusBarColor(Colors.white, Brightness.dark);
 
     return SafeArea(
       child: Material(
