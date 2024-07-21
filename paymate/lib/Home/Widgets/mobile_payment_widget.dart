@@ -72,7 +72,7 @@ class MobilePaymentWidget extends StatelessWidget {
             mobilePayment.userName,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -89,7 +89,7 @@ class MobilePaymentWidget extends StatelessWidget {
             mobilePayment.phoneNumber,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -106,7 +106,7 @@ class MobilePaymentWidget extends StatelessWidget {
             mobilePayment.provider,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),

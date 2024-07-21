@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ...List.generate(
-                            10,
+                            2,
                             (index) => MobilePaymentWidget(
                               mobilePayment: MobilePaymentModel(
                                 phoneNumber: '+1234567890',
