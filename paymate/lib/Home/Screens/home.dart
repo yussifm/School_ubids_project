@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:paymate/Home/Widgets/credit_card_widget.dart';
+import 'package:paymate/Home/Widgets/mobile_payment_widget.dart';
 import 'package:paymate/Models/credit_card_data_model.dart';
+import 'package:paymate/Models/mobile_pay_model.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../apptheme/colors/colors_app.dart';
@@ -76,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ...List.generate(
-                            10,
+                            3,
                             (index) => CreditCardWidget(
                               creditCard: CreditCardModel(
                                 cardNumber: '1234 5678 9101 1121',
@@ -89,7 +91,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     )
-                  : const Text('Coming Soon'),
+                  : SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...List.generate(
+                            10,
+                            (index) => MobilePaymentWidget(
+                              mobilePayment: MobilePaymentModel(
+                                phoneNumber: '+1234567890',
+                                userName: 'Jane Doe',
+                                provider: 'MTN',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
             ],
           ),
         ),

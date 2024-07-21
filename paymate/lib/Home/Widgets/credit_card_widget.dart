@@ -2,6 +2,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:paymate/Models/credit_card_data_model.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
 
@@ -39,7 +40,15 @@ class CreditCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: const DecorationImage(
-            image: AssetImage("assets/images/67269.jpg"), fit: BoxFit.fill),
+          image: AssetImage(
+              "assets/images/gray_line_drawings_of_organic_shapes_background.jpg"),
+          fit: BoxFit.fill,
+          opacity: 0.4,
+          colorFilter: ColorFilter.mode(
+            Colors.white,
+            BlendMode.modulate,
+          ),
+        ),
         color: startColor,
         boxShadow: [
           BoxShadow(
