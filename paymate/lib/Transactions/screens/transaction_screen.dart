@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:paymate/Services/local_services.dart';
+import 'package:paymate/Transactions/screens/payment_selection_screen.dart';
 import 'package:paymate/Transactions/widgets/payment_selector_widgets.dart';
 
 import 'package:paymate/apptheme/colors/colors_app.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -13,6 +16,7 @@ class TransactionScreen extends StatefulWidget {
 class _TransactionScreenState extends State<TransactionScreen> {
   bool isCardView = true;
   bool isQrCode = true;
+  bool isAuth = false;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +132,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
               Center(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(40),
-                  onTap: () {},
+                  onTap: () async {
+                    _checkBiometric();
+                    if (isAuth) {
+                      pushScreenWithoutNavBar(
+                          context, const PaymentSelectorScreen());
+                    }
+                  },
                   child: Container(
                     width: 180,
                     height: 50,
@@ -153,5 +163,15 @@ class _TransactionScreenState extends State<TransactionScreen> {
         ),
       ),
     );
+  }
+
+  _checkBiometric() async {
+    // check for biometric availability
+
+    isAuth = await LocalAuthService.authenticate();
+
+    if (isAuth) {
+      setState(() {});
+    }
   }
 }
