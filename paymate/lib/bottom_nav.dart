@@ -88,7 +88,7 @@ class _BottomNavState extends State<BottomNav> {
               ),
             ),
           ],
-          stateManagement: true,
+          stateManagement: false,
           navBarHeight: 65,
           popAllScreensOnTapOfSelectedTab: true,
           popActionScreens: PopActionScreensType.all,

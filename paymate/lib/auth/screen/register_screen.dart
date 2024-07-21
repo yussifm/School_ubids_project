@@ -509,8 +509,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     //   }
                                     // }
 
-                                    pushScreen(context,
-                                        screen: const BottomNav());
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const BottomNav()),
+                                        (Route<dynamic> route) => false);
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
