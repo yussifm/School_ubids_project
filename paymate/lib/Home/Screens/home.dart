@@ -81,135 +81,144 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isCardView = true;
   @override
   Widget build(BuildContext context) {
+    Size deviceSize = MediaQuery.of(context).size;
+
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'HI, Coded',
-                    style: TextStyle(
+        body: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: SizedBox(
+            width: deviceSize.width,
+            height: deviceSize.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'HI, Coded',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: kDarkPurpleColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      InkWell(
+                        radius: 50,
+                        borderRadius: BorderRadius.circular(100),
+                        onTap: () {
+                          isCardView = !isCardView;
+                          setState(() {});
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color:
+                                  isCardView ? kOrangeColor : kDarkPurpleColor,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Icon(
+                            isCardView
+                                ? PhosphorIconsFill.creditCard
+                                : PhosphorIconsFill.deviceMobile,
+                            color: isCardView ? kOrangeColor : kDarkPurpleColor,
+                            size: 20,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 0,
+                    left: 18,
+                    bottom: 5,
+                  ),
+                  child: Text(
+                    isCardView ? 'Cards Payment' : 'Mobile Payments',
+                    style: const TextStyle(
                       fontSize: 18,
                       color: kDarkPurpleColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  InkWell(
-                    radius: 50,
-                    borderRadius: BorderRadius.circular(100),
-                    onTap: () {
-                      isCardView = !isCardView;
-                      setState(() {});
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isCardView ? kOrangeColor : kDarkPurpleColor,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Icon(
-                        isCardView
-                            ? PhosphorIconsFill.creditCard
-                            : PhosphorIconsFill.deviceMobile,
-                        color: isCardView ? kOrangeColor : kDarkPurpleColor,
-                        size: 20,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 0,
-                left: 18,
-                bottom: 5,
-              ),
-              child: Text(
-                isCardView ? 'Cards Payment' : 'Mobile Payments',
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: kDarkPurpleColor,
-                  fontWeight: FontWeight.w600,
                 ),
-              ),
-            ),
-            isCardView
-                ? SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...List.generate(
-                          3,
-                          (index) => CreditCardWidget(
-                            creditCard: CreditCardModel(
-                              cardNumber: '1234 5678 9101 1121',
-                              expiryDate: '12/24',
-                              cardHolderName: 'John Doe',
-                              cvvCode: '123',
+                isCardView
+                    ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...List.generate(
+                              3,
+                              (index) => CreditCardWidget(
+                                creditCard: CreditCardModel(
+                                  cardNumber: '1234 5678 9101 1121',
+                                  expiryDate: '12/24',
+                                  cardHolderName: 'John Doe',
+                                  cvvCode: '123',
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                : SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...List.generate(
-                          2,
-                          (index) => MobilePaymentWidget(
-                            mobilePayment: MobilePaymentModel(
-                              phoneNumber: '+1234567890',
-                              userName: 'Jane Doe',
-                              provider: 'MTN',
+                      )
+                    : SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...List.generate(
+                              2,
+                              (index) => MobilePaymentWidget(
+                                mobilePayment: MobilePaymentModel(
+                                  phoneNumber: '+1234567890',
+                                  userName: 'Jane Doe',
+                                  provider: 'MTN',
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 30, left: 18, right: 20),
+                  child: Text(
+                    'Transaction History',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: kDarkPurpleColor,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-          
-            const Padding(
-              padding: EdgeInsets.only(top: 30, left: 18, right: 20),
-              child: Text(
-                'Transaction History',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: kDarkPurpleColor,
-                  fontWeight: FontWeight.w500,
                 ),
-              ),
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return TransactionHistoryWidget(
+                          transaction: transactions[index]);
+                    },
+                    itemCount: transactions.length,
+                    shrinkWrap: true,
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return TransactionHistoryWidget(
-                      transaction: transactions[index]);
-                },
-                itemCount: transactions.length,
-                shrinkWrap: true,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

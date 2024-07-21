@@ -50,14 +50,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 40,
-                      child: Image.network(
-                        "https://picsum.photos/200/300",
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
-                            PhosphorIconsBold.user,
-                            size: 40,
-                          );
-                        },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(
+                          "https://picsum.photos/500/500",
+                          fit: BoxFit.fill,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              PhosphorIconsBold.user,
+                              size: 40,
+                            );
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(
