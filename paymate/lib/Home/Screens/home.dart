@@ -4,6 +4,7 @@ import 'package:paymate/Home/Widgets/mobile_payment_widget.dart';
 import 'package:paymate/Home/Widgets/transactional_history_widget.dart';
 import 'package:paymate/Models/credit_card_data_model.dart';
 import 'package:paymate/Models/mobile_pay_model.dart';
+import 'package:paymate/Transactions/widgets/add_card_btn_widgets.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../Models/transaction_history_model.dart';
@@ -173,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
+                            AddCardBtnWidgets(deviceSize: deviceSize),
                           ],
                         ),
                       )
@@ -192,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
+                            AddCardBtnWidgets(deviceSize: deviceSize),
                           ],
                         ),
                       ),

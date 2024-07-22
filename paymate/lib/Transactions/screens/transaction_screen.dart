@@ -17,6 +17,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool isCardView = true;
   bool isQrCode = true;
   bool isAuth = false;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -130,29 +131,37 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
               const SizedBox(height: 80),
               Center(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(40),
-                  onTap: () async {
-                    _checkBiometric();
-                    if (isAuth) {
-                      pushScreenWithoutNavBar(
-                          context, const PaymentSelectorScreen());
-                    }
-                  },
-                  child: Container(
-                    width: 180,
-                    height: 50,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: kDarkPurpleColor,
-                    ),
-                    child: const Text(
-                      "Unlock Transaction",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: kWhiteColor,
-                        fontWeight: FontWeight.w600,
+                child: Visibility(
+                  visible: !isLoading,
+                  replacement: const CircularProgressIndicator(),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(40),
+                    onTap: () async {
+                      await _checkBiometric();
+                      if (isAuth) {
+                        pushScreenWithoutNavBar(
+                            context,
+                            PaymentSelectorScreen(
+                              isCardView: isCardView,
+                              isQrCode: isQrCode,
+                            ));
+                      }
+                    },
+                    child: Container(
+                      width: 180,
+                      height: 50,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: kDarkPurpleColor,
+                      ),
+                      child: const Text(
+                        "Unlock Transaction",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: kWhiteColor,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -167,11 +176,14 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   _checkBiometric() async {
     // check for biometric availability
-
+    setState(() {
+      isLoading = true;
+    });
     isAuth = await LocalAuthService.authenticate();
+    setState(() {
+      isLoading = false;
+    });
 
-    if (isAuth) {
-      setState(() {});
-    }
+  
   }
 }
