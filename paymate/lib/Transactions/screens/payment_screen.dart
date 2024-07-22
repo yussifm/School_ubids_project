@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key});
+  final bool isCardView;
+  final bool isQrCode;
+  const PaymentScreen({
+    Key? key,
+    required this.isCardView,
+    required this.isQrCode,
+  }) : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
