@@ -47,6 +47,8 @@ dependencies:
   phosphor_flutter: ^2.1.0
   local_auth: ^2.2.0
   local_auth_ios: ^1.1.7
+  upi_payment_qrcode_generator: ^1.5.0
+  flutter_camera_qrcode_scanner: ^2.0.0
  
 
 dev_dependencies:

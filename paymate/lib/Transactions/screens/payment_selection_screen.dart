@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:paymate/Home/Widgets/credit_card_widget.dart';
 import 'package:paymate/Home/Widgets/mobile_payment_widget.dart';
 import 'package:paymate/Models/credit_card_data_model.dart';
+import 'package:paymate/Transactions/screens/payment_screen.dart';
 import 'package:paymate/Transactions/widgets/add_card_btn_widgets.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../../Models/mobile_pay_model.dart';
@@ -47,47 +49,76 @@ class _PaymentSelectorScreenState extends State<PaymentSelectorScreen> {
                   ),
                 ),
           centerTitle: true,
+          automaticallyImplyLeading: true,
         ),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (widget.isCardView)
-                ...List.generate(4, (indexCard) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 15,
-                      top: 10,
-                    ),
-                    child: CreditCardWidget(
-                      creditCard: CreditCardModel(
-                        cardNumber: '1234 5678 9101 1121',
-                        expiryDate: '12/24',
-                        cardHolderName: 'John Doe',
-                        cvvCode: '123',
+          child: SizedBox(
+            width: deviceSize.width,
+           
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (widget.isCardView)
+                  ...List.generate(4, (indexCard) {
+                    CreditCardModel creditCard = CreditCardModel(
+                      cardNumber: '1234 5678 9101 1112$indexCard',
+                      expiryDate: '12/2$indexCard',
+                      cardHolderName: 'John Doe',
+                      cvvCode: '12$indexCard',
+                    );
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 15,
+                        top: 10,
                       ),
-                    ),
-                  );
-                }),
-              if (!widget.isCardView)
-                ...List.generate(4, (indexCard) {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 15,
-                      top: 10,
-                    ),
-                    child: MobilePaymentWidget(
-                      mobilePayment: MobilePaymentModel(
-                        phoneNumber: '+1234567890',
-                        userName: 'Jane Doe',
-                        provider: 'MTN',
+                      child: InkWell(
+                        onTap: () {
+                          pushScreenWithoutNavBar(
+                              context,
+                              PaymentScreen(
+                                isCardView: widget.isCardView,
+                                isQrCode: widget.isQrCode,
+                                creditCardDetails: creditCard,
+                              ));
+                        },
+                        child: CreditCardWidget(
+                          creditCard: creditCard,
+                        ),
                       ),
-                    ),
-                  );
-                }),
-              AddCardBtnWidgets(deviceSize: deviceSize),
-            ],
+                    );
+                  }),
+                if (!widget.isCardView)
+                  ...List.generate(4, (indexP) {
+                    MobilePaymentModel mobilePayment = MobilePaymentModel(
+                      phoneNumber: '+123456789$indexP',
+                      userName: 'Jane Doe$indexP',
+                      provider: 'MTN',
+                    );
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 15,
+                        top: 10,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          pushScreenWithoutNavBar(
+                              context,
+                              PaymentScreen(
+                                isCardView: widget.isCardView,
+                                isQrCode: widget.isQrCode,
+                                phonePaymentDetails: mobilePayment,
+                              ));
+                        },
+                        child: MobilePaymentWidget(
+                          mobilePayment: mobilePayment,
+                        ),
+                      ),
+                    );
+                  }),
+                AddCardBtnWidgets(deviceSize: deviceSize),
+              ],
+            ),
           ),
         ),
       ),
