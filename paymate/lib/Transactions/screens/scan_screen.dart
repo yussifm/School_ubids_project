@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_camera_qrcode_scanner/flutter_camera_qrcode_scanner.dart';
 import 'package:flutter_camera_qrcode_scanner/dynamsoft_barcode.dart';
 
+import '../../Widgets/general_btn_widget.dart';
+
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
@@ -46,20 +48,40 @@ class _ScanScreenState extends State<ScanScreen> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    MaterialButton(
-                        child: Text('Start Scan'),
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        onPressed: () async {
-                          controller!.startScanning();
-                        }),
-                    MaterialButton(
-                        child: Text("Stop Scan"),
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        onPressed: () async {
-                          controller!.stopScanning();
-                        })
+                    InkWell(
+                      borderRadius: BorderRadius.circular(40),
+                      onTap: () async {
+                        controller!.startScanning();
+                      },
+                      child: GBtnWidget(
+                        text: 'Start Scan',
+                        width: 100,
+                        color: Colors.greenAccent.shade100,
+                        height: 40,
+                        txtColor: Colors.green.shade900,
+                        fontSize: 14,
+                        fontWight: FontWeight.normal,
+                        bRadius: 12,
+                      ),
+                    ),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(40),
+                      onTap: () async {
+                        controller!.stopScanning();
+                      },
+                      child: GBtnWidget(
+                        text: 'Stop Scan',
+                        width: 100,
+                        color: Colors.redAccent.shade100,
+                        height: 40,
+                        txtColor: Colors.red.shade900,
+                        fontSize: 14,
+                        fontWight: FontWeight.normal,
+                        bRadius: 12,
+                      ),
+                    ),
+                  
+                  
                   ]),
             ),
           ],

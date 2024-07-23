@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:paymate/Models/credit_card_data_model.dart';
 import 'package:paymate/Models/mobile_pay_model.dart';
+import 'package:paymate/Transactions/screens/qr_code_gen_screen.dart';
 import 'package:paymate/Transactions/screens/scan_screen.dart';
 import 'package:paymate/Widgets/general_btn_widget.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
-import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
-import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_camera_qrcode_scanner/flutter_camera_qrcode_scanner.dart';
@@ -34,9 +33,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
   ScannerViewController? controller;
   String _barcodeResults = '';
   bool showScanView = false;
+  TextEditingController _upiIDController = TextEditingController(text: "");
+  TextEditingController _payeeNameController =
+      TextEditingController(text: 'Agnel Selvan');
+  TextEditingController _amountController = TextEditingController(text: '1');
+  TextEditingController _currencyCodeController =
+      TextEditingController(text: 'GHC');
+  TextEditingController _transactionNoteController =
+      TextEditingController(text: 'Hello World');
 
   @override
   void initState() {
+    _upiIDController = TextEditingController(
+      text: widget.isCardView
+          ? widget.creditCardDetails!.cardHolderName.toString()
+          : widget.phonePaymentDetails!.phoneNumber.toString(),
+    );
     super.initState();
   }
 
@@ -143,16 +155,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
               borderRadius: BorderRadius.circular(40),
               onTap: () async {
                 if (widget.isQrCode) {
-                  final upiDetails = UPIDetails(
-                      upiID: "9167877725@axl",
-                      payeeName: "Agnel Selvan",
-                      amount: 1,
-                      transactionNote: "Hello World");
-                  final upiDetailsWithoutAmount = UPIDetails(
-                    upiID: "9167877725@axl",
-                    payeeName: "Agnel Selvan",
-                    transactionNote: "Hello World",
-                  );
+                  _showFormDialog(context);
+                  // pushScreenWithoutNavBar(
+                  //     context,
+                  //     const QRCodeGenScreen(
+                  //       upID: '',
+                  //       payeeName: '',
+                  //       amount: 4,
+                  //       transactionNote: '',
+                  //       currency: '',
+                  //     ));
                 }
               },
               child: GBtnWidget(
@@ -167,6 +179,78 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _showFormDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Details'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: _payeeNameController,
+                  decoration: const InputDecoration(labelText: 'Payee Name'),
+                ),
+                TextField(
+                  controller: _amountController,
+                  decoration: const InputDecoration(labelText: 'Amount'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: _currencyCodeController,
+                  decoration: const InputDecoration(labelText: 'Currency Code'),
+                ),
+                TextField(
+                  controller: _transactionNoteController,
+                  decoration:
+                      const InputDecoration(labelText: 'Transaction Note'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Submit'),
+              onPressed: () {
+                _submitForm();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _submitForm() {
+    final upiID = _upiIDController.text;
+    final payeeName = _payeeNameController.text;
+    final amount = double.parse(_amountController.text);
+    final currencyCode = _currencyCodeController.text;
+    final transactionNote = _transactionNoteController.text;
+
+    Navigator.of(context).pop(); // Close the dialog
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QRCodeGenScreen(
+          upID: upiID,
+          payeeName: payeeName,
+          amount: amount,
+          transactionNote: transactionNote,
+          currency: currencyCode,
         ),
       ),
     );
