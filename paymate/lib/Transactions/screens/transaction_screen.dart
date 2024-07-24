@@ -129,7 +129,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 80),
+              const SizedBox(height: 60),
               Center(
                 child: Visibility(
                   visible: !isLoading,
@@ -168,6 +168,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   
                 ),
               ),
+
+              const SizedBox(height: 40),
             ],
           ),
         ),
