@@ -22,6 +22,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "===== Device Hight ==== ${MediaQuery.of(context).size.height} =====");
+    Size deviceSize = MediaQuery.of(context).size;
     return OnBoardingSlider(
       finishButtonText: 'Register',
       onFinish: () {
@@ -72,10 +75,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ));
       },
       background: [
-        Image.asset(
-          'assets/images/Hello-rafiki.png',
-          height: 400,
-          fit: BoxFit.fitWidth,
+        Center(
+          child: Image.asset(
+            'assets/images/Hello-rafiki.png',
+            height: 400,
+            fit: BoxFit.fitWidth,
+          ),
         ),
         Image.asset(
           'assets/images/Scantopay.gif',
@@ -99,31 +104,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: 480,
+                height: deviceSize.height < 800 ? 390 : 480,
               ),
-              Text(
+              const Text(
                 'Welcome to PayMate',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkPurpleColor,
-                  fontSize: 24.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
-                height: 20,
+              const SizedBox(
+                height: 18,
               ),
-              Text(
+              const Text(
                 'less, secure, and convenient contactless payments. PayMate empowers you to handle transactions with just a tap or scan.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -134,31 +139,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: 480,
+                height: deviceSize.height < 800 ? 390 : 480,
               ),
-              Text(
+              const Text(
                 'Quick and Easy Payments',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkPurpleColor,
-                  fontSize: 24.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
-                height: 20,
+              const SizedBox(
+                height: 18,
               ),
-              Text(
+              const Text(
                 "Use QR codes, NFC, and other advanced technologies to pay effortlessly. Whether you're buying a coffee or shopping for groceries, PayMate makes it fast and simple.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -169,31 +174,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: 480,
+                height: deviceSize.height < 800 ? 390 : 480,
               ),
-              Text(
+              const Text(
                 'Secure Transactions',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkPurpleColor,
-                  fontSize: 24.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
-                height: 20,
+              const SizedBox(height: 18
               ),
-              Text(
+              const Text(
                 'Your security is our priority. With robust encryption and secure protocols, PayMate ensures your payments are safe and protected.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -204,31 +208,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: 480,
+                height: deviceSize.height < 800 ? 390 : 480,
               ),
-              Text(
+              const Text(
                 'Get Started',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkPurpleColor,
-                  fontSize: 24.0,
+                  fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
-                height: 20,
+              const SizedBox(
+                height: 18,
               ),
-              Text(
+              const Text(
                 'Ready to transform your payment experience? Sign up or log in to start using PayMate today!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
