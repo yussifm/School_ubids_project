@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
-                        'HI, Coded',
+                        'HI, Seth',
                         style: TextStyle(
                           fontSize: 18,
                           color: kDarkPurpleColor,
