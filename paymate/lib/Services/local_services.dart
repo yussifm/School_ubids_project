@@ -21,7 +21,7 @@ class LocalAuthService {
 
     try {
       return await _auth.authenticate(
-        options: AuthenticationOptions(
+        options: const AuthenticationOptions(
           useErrorDialogs: false,
           stickyAuth: true,
           biometricOnly: false,
