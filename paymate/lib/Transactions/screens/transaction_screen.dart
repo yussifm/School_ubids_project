@@ -137,8 +137,9 @@ class _TransactionScreenState extends State<TransactionScreen> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(40),
                     onTap: () async {
-                      _checkBiometric();
-                      if (isAuth) {
+                      // await checkBiometric();
+                      // remember to change this back
+                      if (!isAuth) {
                         pushScreenWithoutNavBar(
                             context,
                             PaymentSelectorScreen(
@@ -175,7 +176,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 
-  _checkBiometric() async {
+  checkBiometric() async {
     // check for biometric availability
     print("Trans tap");
     setState(() {
