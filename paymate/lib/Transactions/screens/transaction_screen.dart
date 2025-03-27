@@ -18,6 +18,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
   bool isQrCode = true;
   bool isAuth = false;
   bool isLoading = false;
+  bool isNfcAvailable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -114,17 +115,23 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      setState(() {
-                        isQrCode = false;
-                      });
-                    },
+                    onTap: isNfcAvailable
+                        ? () {
+                            setState(() {
+                              isQrCode = false;
+                            });
+                          }
+                        : () {
+                            showDisabledPopup(context);
+                          },
+                    splashColor: isNfcAvailable ? null : Colors.transparent,
+                    highlightColor: isNfcAvailable ? null : Colors.transparent,
                     child: PaymentSelectorWidget(
                       deviceSize: deviceSize,
                       title: 'NFC/RFID',
                       imgsrc: 'assets/icons/nfc_.png',
                       isSelected: !isQrCode,
-                      color: Colors.greenAccent,
+                      color: isNfcAvailable ? Colors.greenAccent : Colors.grey,
                     ),
                   ),
                 ],
@@ -186,5 +193,26 @@ class _TransactionScreenState extends State<TransactionScreen> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  void showDisabledPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('NFC/RFID Unavailable'),
+          content: const Text(
+              'NFC/RFID functionality is currently disabled or not supported on this device.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -39,7 +39,7 @@ class _ScanScreenState extends State<ScanScreen> {
               child: SingleChildScrollView(
                 child: Text(
                   _barcodeResults,
-                  style: TextStyle(fontSize: 14, color: Colors.white),
+                  style: const TextStyle(fontSize: 14, color: Colors.white),
                 ),
               ),
             ),
@@ -80,8 +80,6 @@ class _ScanScreenState extends State<ScanScreen> {
                         bRadius: 12,
                       ),
                     ),
-                  
-                  
                   ]),
             ),
           ],
@@ -101,7 +99,37 @@ class _ScanScreenState extends State<ScanScreen> {
     controller.scannedDataStream.listen((results) {
       setState(() {
         _barcodeResults = getBarcodeResults(results);
+        print(_barcodeResults);
+        //  upi://pay?pa=+1234567890&pn=Agnel Selvan&tr=&am=1.0&cu=GHC&mc=0000&mode=02&purpose=00&tn=Hello World&tr=
       });
+      // Process only if there's exactly one QR code detected
+      if (results.length == 1) {
+        String scannedText = results.first.text;
+        try {
+          // Parse the scanned text as a URI
+          Uri uri = Uri.parse(scannedText);
+
+          // Check if it's a UPI payment link
+          if (uri.scheme == 'upi' && uri.host == 'pay') {
+            Map<String, String> params = uri.queryParameters;
+
+            // Validate that required parameters are present
+            if (params.containsKey('pn') &&
+                params.containsKey('am') &&
+                params.containsKey('cu') &&
+                params.containsKey('tn')) {
+              // Stop the scanner
+              controller.stopScanning();
+
+              // Show the success popup with extracted details
+              showSuccessPopup(context, params['pn']!, params['am']!,
+                  params['cu']!, params['tn']!);
+            }
+          }
+        } catch (e) {
+          // If parsing fails (e.g., invalid URI), do nothing or handle the error as needed
+        }
+      }
     });
   }
 
@@ -115,6 +143,56 @@ class _ScanScreenState extends State<ScanScreen> {
     }
     if (results.isEmpty) sb.write("No QR Code Detected");
     return sb.toString();
+  }
+
+  void showSuccessPopup(
+      BuildContext context, String pn, String am, String cu, String tn) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green, size: 30),
+              SizedBox(width: 10),
+              Text('Scan Successful', style: TextStyle(fontSize: 20)),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Payee Name:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(pn, style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 10),
+              const Text('Amount:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('$am $cu', style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 10),
+              const Text('Transaction Note:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(tn, style: const TextStyle(fontSize: 16)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                controller?.stopScanning();
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Close the screen
+              },
+              child: const Text('Close',
+                  style: TextStyle(
+                    color: Colors.blue,
+                  )),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
