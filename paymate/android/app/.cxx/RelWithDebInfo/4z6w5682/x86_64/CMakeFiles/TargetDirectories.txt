@@ -1,0 +1,2 @@
+D:/programming/pratice_area/Dart/School_ubids_project/paymate/android/app/.cxx/RelWithDebInfo/4z6w5682/x86_64/CMakeFiles/edit_cache.dir
+D:/programming/pratice_area/Dart/School_ubids_project/paymate/android/app/.cxx/RelWithDebInfo/4z6w5682/x86_64/CMakeFiles/rebuild_cache.dir
