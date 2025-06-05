@@ -9,7 +9,7 @@ import '../../Models/transaction_history_model.dart';
 class TransactionHistoryWidget extends StatelessWidget {
   final TransactionModel transaction;
 
-  TransactionHistoryWidget({required this.transaction});
+  const TransactionHistoryWidget({super.key, required this.transaction});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class TransactionHistoryWidget extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundColor: transaction.type == 'sending'
+            backgroundColor: transaction.type == 'send'
                 ? Colors.redAccent
                 : Colors.greenAccent,
             child: Icon(

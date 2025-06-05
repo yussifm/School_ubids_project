@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
 
 import 'package:paymate/apptheme/colors/colors_app.dart';
+
+import '../../Models/transaction_history_model.dart';
+import '../providers_transaction.dart';
 
 class QRCodeGenScreen extends StatefulWidget {
   final String upID;
@@ -43,7 +48,6 @@ class _QRCodeGenScreenState extends State<QRCodeGenScreen> {
 
     super.initState();
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +60,28 @@ class _QRCodeGenScreenState extends State<QRCodeGenScreen> {
             color: kDarkPurpleColor,
             fontWeight: FontWeight.w600,
           ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            final double parsedAmount =
+                double.tryParse(upiDetails.amount as String) ?? 0.0;
+            final String nowIso = DateTime.now().toIso8601String();
+
+            final newTransaction = TransactionModel(
+              name: upiDetails.payeeName,
+              dateTime: nowIso,
+              amount: parsedAmount,
+              // Choose whichever icon you like; here we assume a “sending” icon:
+              icon: PhosphorIconsRegular.caretDoubleDown,
+              type: 'send', // or 'Sending' based on your logic
+            );
+
+            Provider.of<TransactionProvider>(context, listen: false)
+                .addTransaction(newTransaction);
+            Navigator.pop(context);
+          },
         ),
       ),
       body: Center(
