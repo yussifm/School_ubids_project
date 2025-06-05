@@ -1,78 +1,22 @@
+// lib/Home/home_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:paymate/Transactions/providers_transaction.dart';
+import 'package:provider/provider.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:paymate/Transactions/widgets/add_card_btn_widgets.dart';
 import 'package:paymate/Home/Widgets/credit_card_widget.dart';
 import 'package:paymate/Home/Widgets/mobile_payment_widget.dart';
-import 'package:paymate/Home/Widgets/transactional_history_widget.dart';
-import 'package:paymate/Models/credit_card_data_model.dart';
-import 'package:paymate/Models/mobile_pay_model.dart';
-import 'package:paymate/Transactions/widgets/add_card_btn_widgets.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:paymate/apptheme/colors/colors_app.dart';
 
-import '../../Models/transaction_history_model.dart';
-import '../../apptheme/colors/colors_app.dart';
+import '../../Models/credit_card_data_model.dart';
+import '../../Models/mobile_pay_model.dart';
+import '../Widgets/transactional_history_widget.dart';
 
-
-final List<TransactionModel> transactions = [
-  TransactionModel(
-    name: 'Grocery Store',
-    dateTime: '12:22 a.m May 20',
-    amount: 350.0,
-    icon: PhosphorIconsRegular.caretDoubleUp,
-    type: 'sending',
-  ),
-  TransactionModel(
-    name: 'Coffee Shop',
-    dateTime: '10:15 a.m May 18',
-    amount: 50.0,
-    icon: PhosphorIconsRegular.caretDoubleDown,
-    type: 'receiving',
-  ),
-  TransactionModel(
-    name: 'Grocery Store',
-    dateTime: '12:22 a.m May 20',
-    amount: 350.0,
-    icon: PhosphorIconsRegular.caretDoubleUp,
-    type: 'sending',
-  ),
-  TransactionModel(
-    name: 'Coffee Shop',
-    dateTime: '10:15 a.m May 18',
-    amount: 50.0,
-    icon: PhosphorIconsRegular.caretDoubleDown,
-    type: 'receiving',
-  ),
-  TransactionModel(
-    name: 'Grocery Store',
-    dateTime: '12:22 a.m May 20',
-    amount: 350.0,
-    icon: PhosphorIconsRegular.caretDoubleUp,
-    type: 'sending',
-  ),
-  TransactionModel(
-    name: 'Coffee Shop',
-    dateTime: '10:15 a.m May 18',
-    amount: 50.0,
-    icon: PhosphorIconsRegular.caretDoubleDown,
-    type: 'receiving',
-  ),
-  TransactionModel(
-    name: 'Grocery Store',
-    dateTime: '12:22 a.m May 20',
-    amount: 350.0,
-    icon: PhosphorIconsRegular.caretDoubleUp,
-    type: 'sending',
-  ),
-  TransactionModel(
-    name: 'Coffee Shop',
-    dateTime: '10:15 a.m May 18',
-    amount: 50.0,
-    icon: PhosphorIconsRegular.caretDoubleDown,
-    type: 'receiving',
-  ),
-];
-
+// Import your TransactionProvider (which persists via SharedPreferences)
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -80,152 +24,181 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isCardView = true;
+
   @override
   Widget build(BuildContext context) {
-    Size deviceSize = MediaQuery.of(context).size;
+    final deviceSize = MediaQuery.of(context).size;
+    // Obtain the provider; whenever TransactionProvider.notifyListeners() is called,
+    // this widget rebuilds and the ListView below will update automatically.
+    final txProvider = Provider.of<TransactionProvider>(context);
 
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: SizedBox(
-            width: deviceSize.width,
-            height: deviceSize.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'HI, Seth',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: kDarkPurpleColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      InkWell(
-                        radius: 50,
-                        borderRadius: BorderRadius.circular(100),
-                        onTap: () {
-                          isCardView = !isCardView;
-                          setState(() {});
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color:
-                                  isCardView ? kOrangeColor : kDarkPurpleColor,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Icon(
-                            isCardView
-                                ? PhosphorIconsFill.creditCard
-                                : PhosphorIconsFill.deviceMobile,
-                            color: isCardView ? kOrangeColor : kDarkPurpleColor,
-                            size: 20,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 0,
-                    left: 18,
-                    bottom: 5,
-                  ),
-                  child: Text(
-                    isCardView ? 'Cards Payment' : 'Mobile Payments',
-                    style: const TextStyle(
+        body: Column(
+          children: [
+            // ───────────── Header Row ─────────────
+            Padding(
+              padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'HI, Seth',
+                    style: TextStyle(
                       fontSize: 18,
                       color: kDarkPurpleColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-                isCardView
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ...List.generate(
-                              3,
-                              (index) => CreditCardWidget(
-                                creditCard: CreditCardModel(
-                                  cardNumber: '1234 5678 9101 1121',
-                                  expiryDate: '12/24',
-                                  cardHolderName: 'John Doe',
-                                  cvvCode: '123',
-                                ),
-                              ),
-                            ),
-                            AddCardBtnWidgets(deviceSize: deviceSize),
-                          ],
-                        ),
-                      )
-                    : SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ...List.generate(
-                              2,
-                              (index) => MobilePaymentWidget(
-                                mobilePayment: MobilePaymentModel(
-                                  phoneNumber: '+1234567890',
-                                  userName: 'Jane Doe',
-                                  provider: 'MTN',
-                                ),
-                              ),
-                            ),
-                            AddCardBtnWidgets(deviceSize: deviceSize),
-                          ],
+                  InkWell(
+                    radius: 50,
+                    borderRadius: BorderRadius.circular(100),
+                    onTap: () {
+                      setState(() {
+                        isCardView = !isCardView;
+                      });
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isCardView ? kOrangeColor : kDarkPurpleColor,
+                          width: 1.5,
                         ),
                       ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 30, left: 18, right: 20),
-                  child: Text(
-                    'Transaction History',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: kDarkPurpleColor,
-                      fontWeight: FontWeight.w500,
+                      child: Icon(
+                        isCardView
+                            ? PhosphorIconsFill.creditCard
+                            : PhosphorIconsFill.deviceMobile,
+                        color: isCardView ? kOrangeColor : kDarkPurpleColor,
+                        size: 20,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return TransactionHistoryWidget(
-                          transaction: transactions[index]);
-                    },
-                    itemCount: transactions.length,
-                    shrinkWrap: true,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+
+            const SizedBox(height: 20),
+
+            // ───────────── Section Title ─────────────
+            Padding(
+              padding: const EdgeInsets.only(left: 18, bottom: 5),
+              child: Text(
+                isCardView ? 'Cards Payment' : 'Mobile Payments',
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: kDarkPurpleColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
+            // ───────────── Cards / Mobile View ─────────────
+            SizedBox(
+              height: 200, // adjust this height as needed for your card row
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isCardView)
+                      ...List.generate(
+                        3,
+                        (index) => CreditCardWidget(
+                          creditCard: CreditCardModel(
+                            cardNumber: '1234 5678 9101 1121',
+                            expiryDate: '12/24',
+                            cardHolderName: 'John Doe',
+                            cvvCode: '123',
+                          ),
+                        ),
+                      )
+                    else
+                      ...List.generate(
+                        2,
+                        (index) => MobilePaymentWidget(
+                          mobilePayment: MobilePaymentModel(
+                            phoneNumber: '+1234567890',
+                            userName: 'Jane Doe',
+                            provider: 'MTN',
+                          ),
+                        ),
+                      ),
+                    AddCardBtnWidgets(deviceSize: deviceSize),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            // ───────────── Transaction History Title ─────────────
+            const Padding(
+              padding: EdgeInsets.only(left: 18, right: 20),
+              child: Text(
+                'Transaction History',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: kDarkPurpleColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // ───────────── Transaction List ─────────────
+            // We wrap ListView in Expanded so it takes up the remaining space.
+            Expanded(
+              child: txProvider.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : txProvider.transactions.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            'No transactions yet. Perform a transaction to see history.',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: txProvider.transactions.length,
+                          itemBuilder: (ctx, index) {
+                            final tx = txProvider.transactions[index];
+                            return Dismissible(
+                              key: ValueKey(
+                                  tx.dateTime + tx.name + tx.amount.toString()),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onDismissed: (_) {
+                                // Remove from provider (this also updates SharedPreferences)
+                                txProvider.removeTransactionAt(index);
+                              },
+                              child: TransactionHistoryWidget(
+                                transaction: tx,
+                              ),
+                            );
+                          },
+                        ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-

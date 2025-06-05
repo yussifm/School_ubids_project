@@ -183,6 +183,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 controller?.stopScanning();
                 Navigator.of(context).pop(); // Close the dialog
                 Navigator.of(context).pop(); // Close the screen
+                Navigator.of(context).pop(); // Close the screen
               },
               child: const Text('Close',
                   style: TextStyle(

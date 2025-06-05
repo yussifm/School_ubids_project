@@ -1,7 +1,10 @@
 // transaction_history_widget.dart
 
 import 'package:flutter/material.dart';
-import 'package:paymate/Models/transaction_history_model.dart';
+
+import '../../Models/transaction_history_model.dart';
+
+
 
 class TransactionHistoryWidget extends StatelessWidget {
   final TransactionModel transaction;
