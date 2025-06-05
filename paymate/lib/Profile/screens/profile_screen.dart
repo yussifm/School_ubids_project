@@ -12,6 +12,8 @@ import 'package:paymate/onboarding/screens/main_onboading_screen.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import '../../onboarding/onboarding_provider.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -261,11 +263,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 60),
                   ProfileBtnWidget(
                     onPressed: () {
-                      pushReplacementWithoutNavBar(
-                        context,
+                      // 1) Reset onboarding so that next app launch shows it again:
+                      Provider.of<OnboardingProvider>(context, listen: false)
+                          .reset();
+
+                      // 2) Navigate to the onboarding screen, clearing the stack:
+                      Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => const OnboardingScreen(),
-                        ),
+                            builder: (_) => const OnboardingScreen()),
+                        (Route<dynamic> route) => false,
                       );
                     },
                     title: 'Logout',

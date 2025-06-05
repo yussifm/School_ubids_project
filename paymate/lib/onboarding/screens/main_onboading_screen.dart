@@ -1,14 +1,16 @@
+// lib/onboarding/screens/main_onboading_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
-
+import 'package:provider/provider.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
 import 'package:paymate/auth/screen/login_screen.dart';
+import 'package:paymate/onboarding/onboarding_provider.dart';
 
-import '../../auth/screen/register_screen.dart';
+import '../../bottom_nav.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({Key? key}) : super(key: key);
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -16,24 +18,19 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print(
-        "===== Device Hight ==== ${MediaQuery.of(context).size.height} =====");
-    Size deviceSize = MediaQuery.of(context).size;
+    final deviceSize = MediaQuery.of(context).size;
     return OnBoardingSlider(
-      finishButtonText: 'Register',
-      onFinish: () {
-        // Navigate to Register screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const RegistrationScreen(),
-          ),
+      finishButtonText: 'Get Started',
+      onFinish: () async {
+        // 1) Mark onboarding as seen
+        await Provider.of<OnboardingProvider>(context, listen: false)
+            .markSeen();
+
+        // 2) Navigate to BottomNav, removing all previous routes
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const BottomNav()),
+          (Route<dynamic> route) => false,
         );
       },
       totalPage: 4,
@@ -45,9 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         backgroundColor: kDarkPurpleColor,
         elevation: 2.2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(100),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(100)),
         ),
       ),
       skipTextButton: const Text(
@@ -66,13 +61,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           fontWeight: FontWeight.w600,
         ),
       ),
-      trailingFunction: () {
-        // Navigate to login screen
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const LoginScreen(),
-            ));
+      trailingFunction: () async {
+        // 1) Mark onboarding as seen (so we don't show it again)
+        await Provider.of<OnboardingProvider>(context, listen: false)
+            .markSeen();
+
+        // 2) Navigate to Login screen (or straight to BottomNav if you prefer)
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (Route<dynamic> route) => false,
+        );
       },
       background: [
         Center(
@@ -102,15 +100,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       pageBodies: [
         Container(
           alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
+          width: deviceSize.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: deviceSize.height < 800 ? 390 : 480,
-              ),
+              SizedBox(height: deviceSize.height < 800 ? 390 : 480),
               const Text(
                 'Welcome to PayMate',
                 textAlign: TextAlign.center,
@@ -120,11 +114,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(
-                height: 18,
-              ),
+              const SizedBox(height: 18),
               const Text(
-                'less, secure, and convenient contactless payments. PayMate empowers you to handle transactions with just a tap or scan.',
+                'Secure, convenient contactless payments. PayMate empowers you with just a tap or scan.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
@@ -137,17 +129,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         Container(
           alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
+          width: deviceSize.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: deviceSize.height < 800 ? 390 : 480,
-              ),
+              SizedBox(height: deviceSize.height < 800 ? 390 : 480),
               const Text(
-                'Quick and Easy Payments',
+                'Quick & Easy Payments',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkPurpleColor,
@@ -155,11 +143,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(
-                height: 18,
-              ),
+              const SizedBox(height: 18),
               const Text(
-                "Use QR codes, NFC, and other advanced technologies to pay effortlessly. Whether you're buying a coffee or shopping for groceries, PayMate makes it fast and simple.",
+                "Use QR codes, NFC, and more. PayMate makes every purchase fast and simple.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
@@ -172,15 +158,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         Container(
           alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
+          width: deviceSize.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: deviceSize.height < 800 ? 390 : 480,
-              ),
+              SizedBox(height: deviceSize.height < 800 ? 390 : 480),
               const Text(
                 'Secure Transactions',
                 textAlign: TextAlign.center,
@@ -190,10 +172,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 18
-              ),
+              const SizedBox(height: 18),
               const Text(
-                'Your security is our priority. With robust encryption and secure protocols, PayMate ensures your payments are safe and protected.',
+                'Your security is our priority. PayMate uses strong encryption and protocols to keep you safe.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
@@ -206,15 +187,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         Container(
           alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
+          width: deviceSize.width,
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(
-                height: deviceSize.height < 800 ? 390 : 480,
-              ),
+              SizedBox(height: deviceSize.height < 800 ? 390 : 480),
               const Text(
                 'Get Started',
                 textAlign: TextAlign.center,
@@ -224,11 +201,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(
-                height: 18,
-              ),
+              const SizedBox(height: 18),
               const Text(
-                'Ready to transform your payment experience? Sign up or log in to start using PayMate today!',
+                'Ready to transform your experience? Sign up or log in now!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
