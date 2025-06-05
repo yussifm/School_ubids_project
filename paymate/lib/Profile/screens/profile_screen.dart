@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       builder: (context) => Padding(
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 150,
           left: 16,
           right: 16,
           top: 16,
