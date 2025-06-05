@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Obtain the provider; whenever TransactionProvider.notifyListeners() is called,
     // this widget rebuilds and the ListView below will update automatically.
     final txProvider = Provider.of<TransactionProvider>(context);
+    var listOftrans = txProvider.transactions.reversed.toList();
 
     return SafeArea(
       child: Scaffold(
@@ -168,9 +169,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       : ListView.builder(
-                          itemCount: txProvider.transactions.length,
+                          itemCount: listOftrans.length,
                           itemBuilder: (ctx, index) {
-                            final tx = txProvider.transactions[index];
+                            final tx = listOftrans[index];
                             return Dismissible(
                               key: ValueKey(
                                   tx.dateTime + tx.name + tx.amount.toString()),

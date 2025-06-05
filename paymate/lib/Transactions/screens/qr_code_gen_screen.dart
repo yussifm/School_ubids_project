@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paymate/bottom_nav.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:upi_payment_qrcode_generator/upi_payment_qrcode_generator.dart';
@@ -36,6 +37,8 @@ class _QRCodeGenScreenState extends State<QRCodeGenScreen> {
     transactionNote: "",
   );
 
+  bool isLoading = false;
+
   @override
   void initState() {
     upiDetails = UPIDetails(
@@ -65,47 +68,68 @@ class _QRCodeGenScreenState extends State<QRCodeGenScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () async {
-            final double parsedAmount =
-                double.tryParse(upiDetails.amount as String) ?? 0.0;
+            setState(() {
+              isLoading = true;
+            });
+           
             final String nowIso = DateTime.now().toIso8601String();
 
             final newTransaction = TransactionModel(
               name: upiDetails.payeeName,
               dateTime: nowIso,
-              amount: parsedAmount,
+              amount: upiDetails.amount ?? 0.0,
               // Choose whichever icon you like; here we assume a “sending” icon:
-              icon: PhosphorIconsRegular.caretDoubleDown,
+              icon: PhosphorIconsRegular.caretDoubleUp,
               type: 'send', // or 'Sending' based on your logic
             );
 
             await Provider.of<TransactionProvider>(context, listen: false)
                 .addTransaction(newTransaction);
-            Navigator.pop(context);
+            setState(() {
+              isLoading = false;
+            });
+
+            if (isLoading == false) {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const BottomNav()),
+                  (Route<dynamic> route) => false);
+            }
+            
           },
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Scan QR to Pay",
-              style: TextStyle(color: Colors.grey[600], letterSpacing: 1.2),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            UPIPaymentQRCode(
-              upiDetails: upiDetails,
-              size: 220,
-              upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
-            ),
-            Text(
-              "Scan QR to Pay",
-              style: TextStyle(color: Colors.grey[600], letterSpacing: 1.2),
-            ),
-          ],
+        child: Visibility(
+          visible: !isLoading,
+          replacement: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              Text("Checking Payment status..."),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Scan QR to Pay",
+                style: TextStyle(color: Colors.grey[600], letterSpacing: 1.2),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              UPIPaymentQRCode(
+                upiDetails: upiDetails,
+                size: 220,
+                upiQRErrorCorrectLevel: UPIQRErrorCorrectLevel.high,
+              ),
+              Text(
+                "Scan QR to Pay",
+                style: TextStyle(color: Colors.grey[600], letterSpacing: 1.2),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -226,7 +226,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   amount: parsedAmount,
                   // Choose whichever icon you like; here we assume a “sending” icon:
                   // icon: PhosphorIconsRegular.caretDoubleUp,
-                  icon: PhosphorIconsRegular.caretDoubleUp,
+                  icon: PhosphorIconsRegular.caretDoubleDown,
                   type: 'Received', // or 'Sending' based on your logic
                 );
 
