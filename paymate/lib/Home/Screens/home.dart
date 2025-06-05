@@ -82,8 +82,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+            // ───────────── Balance Section ─────────────
+            const SizedBox(height: 10),
 
-            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Total Balance',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: kDarkPurpleColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    '\$${txProvider.totalAmount.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: kDarkPurpleColor,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
 
             // ───────────── Section Title ─────────────
             Padding(

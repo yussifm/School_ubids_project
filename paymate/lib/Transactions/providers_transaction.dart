@@ -12,6 +12,22 @@ class TransactionProvider extends ChangeNotifier {
   // 1) loading flag:
   bool _isLoading = true;
   bool get isLoading => _isLoading;
+  double get totalAmount {
+    if (_transactions.isEmpty) {
+      return 10.0;
+    }
+    return _transactions.fold(0.0, (double sum, TransactionModel tx) {
+      sum = 10.0;
+      if (tx.type == 'received' || tx.type == 'receiving') {
+        return sum + tx.amount;
+      } else if (tx.type == 'send' || tx.type == 'sending') {
+        return sum - tx.amount;
+      } else {
+        // If an unexpected type appears, just ignore it.
+        return sum;
+      }
+    });
+  }
 
   List<TransactionModel> _transactions = [];
   List<TransactionModel> get transactions => List.unmodifiable(_transactions);
