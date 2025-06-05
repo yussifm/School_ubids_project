@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:paymate/Profile/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:paymate/Profile/screens/my_earnings_payout_screen.dart';
+import 'package:paymate/Profile/screens/privacy_settings_screen.dart';
+import 'package:paymate/Profile/screens/faq_support_screen.dart';
 import 'package:paymate/Profile/widgets/profile_btn_widget.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
 import 'package:paymate/onboarding/screens/main_onboading_screen.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -18,23 +20,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // We keep a TextEditingController to edit the name in the bottom sheet.
   late final TextEditingController _nameController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize with an empty controller; we will set its text when provider is loaded.
     _nameController = TextEditingController();
 
-    // As soon as the provider finishes loading (isLoading==false), we'll set _nameController.text.
-    // We can listen to the provider to know when it’s done.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userProv = Provider.of<UserProvider>(context, listen: false);
       if (!userProv.isLoading) {
         _nameController.text = userProv.userName;
       } else {
-        // If still loading, wait until it updates:
         userProv.addListener(() {
           if (!userProv.isLoading) {
             _nameController.text = userProv.userName;
@@ -99,14 +96,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   final newName = _nameController.text.trim();
                   if (newName.isEmpty) return;
 
-                  // 1) Update UserProvider (which also writes to SharedPreferences).
                   final userProv = Provider.of<UserProvider>(
                     context,
                     listen: false,
                   );
                   await userProv.setUserName(newName);
 
-                  // 2) Close the bottom sheet.
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
@@ -134,10 +129,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to UserProvider so that whenever userName changes, this widget rebuilds.
     return Consumer<UserProvider>(
       builder: (context, userProv, child) {
-        // If provider is still loading, show a spinner:
         if (userProv.isLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
@@ -146,7 +139,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         final currentName = userProv.userName;
         _nameController.text = currentName;
-
         final deviceSize = MediaQuery.of(context).size;
 
         return Scaffold(
@@ -167,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(
                 children: [
-                  // ─────────── User Info Header ───────────
+                  // ─────────── User Info ───────────
                   Container(
                     width: deviceSize.width,
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -231,25 +223,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
 
                   const SizedBox(height: 20),
+
+                  // ─────────── Buttons to navigate ───────────
                   ProfileBtnWidget(
-                    onPressed: () {},
-                    title: 'Add Payment Methods',
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const MyEarningsPayoutScreen(),
+                        ),
+                      );
+                    },
+                    title: 'My Earnings & Payout',
                   ),
                   const SizedBox(height: 20),
                   ProfileBtnWidget(
-                    onPressed: () {},
-                    title: 'My Earnings & Payout',
-                  ),
-                  const SizedBox(height: 60),
-                  ProfileBtnWidget(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const PrivacySettingsScreen(),
+                        ),
+                      );
+                    },
                     title: 'Manage Your Privacy Settings',
                   ),
                   const SizedBox(height: 20),
                   ProfileBtnWidget(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const FAQSupportScreen(),
+                        ),
+                      );
+                    },
                     title: "FAQ's & Support",
                   ),
+
                   const SizedBox(height: 60),
                   ProfileBtnWidget(
                     onPressed: () {
