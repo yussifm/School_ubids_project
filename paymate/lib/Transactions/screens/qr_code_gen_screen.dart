@@ -64,7 +64,7 @@ class _QRCodeGenScreenState extends State<QRCodeGenScreen> {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
+          onPressed: () async {
             final double parsedAmount =
                 double.tryParse(upiDetails.amount as String) ?? 0.0;
             final String nowIso = DateTime.now().toIso8601String();
@@ -78,7 +78,7 @@ class _QRCodeGenScreenState extends State<QRCodeGenScreen> {
               type: 'send', // or 'Sending' based on your logic
             );
 
-            Provider.of<TransactionProvider>(context, listen: false)
+            await Provider.of<TransactionProvider>(context, listen: false)
                 .addTransaction(newTransaction);
             Navigator.pop(context);
           },

@@ -49,11 +49,12 @@ class TransactionHistoryWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  transaction.type == 'sending' ? 'Sending' : 'Receiving',
+                  transaction.type == 'send' ? 'Send' : 'Received',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: transaction.type == 'sending'
+                    color:
+                        transaction.type == 'send'
                         ? Colors.red
                         : Colors.green,
                   ),
