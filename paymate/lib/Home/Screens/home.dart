@@ -11,6 +11,7 @@ import 'package:paymate/apptheme/colors/colors_app.dart';
 
 import '../../Models/credit_card_data_model.dart';
 import '../../Models/mobile_pay_model.dart';
+import '../../Profile/user_provider.dart';
 import '../Widgets/transactional_history_widget.dart';
 
 // Import your TransactionProvider (which persists via SharedPreferences)
@@ -24,7 +25,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isCardView = true;
+// Default username until loaded from SharedPreferences
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -32,6 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // this widget rebuilds and the ListView below will update automatically.
     final txProvider = Provider.of<TransactionProvider>(context);
     var listOftrans = txProvider.transactions.reversed.toList();
+    final userProv = Provider.of<UserProvider>(context);
+    final userName = userProv.userName;
+
+   
+
+
 
     return SafeArea(
       child: Scaffold(
@@ -43,9 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'HI, Seth',
-                    style: TextStyle(
+                  Text(
+                    'HI, ${userName.toUpperCase()}',
+                    style: const TextStyle(
                       fontSize: 18,
                       color: kDarkPurpleColor,
                       fontWeight: FontWeight.w600,

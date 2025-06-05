@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:paymate/Profile/user_provider.dart';
 import 'package:paymate/Transactions/providers_transaction.dart';
 import 'package:paymate/firebase_options.dart';
 import 'package:paymate/onboarding/screens/main_onboading_screen.dart';
@@ -14,6 +15,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

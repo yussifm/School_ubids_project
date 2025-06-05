@@ -1,9 +1,14 @@
+// lib/Profile/screens/profile_screen.dart
+
 import 'package:flutter/material.dart';
+import 'package:paymate/Profile/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:paymate/Profile/widgets/profile_btn_widget.dart';
 import 'package:paymate/apptheme/colors/colors_app.dart';
 import 'package:paymate/onboarding/screens/main_onboading_screen.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,13 +18,30 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String userName = "Seth";
-  final TextEditingController _nameController = TextEditingController();
+  // We keep a TextEditingController to edit the name in the bottom sheet.
+  late final TextEditingController _nameController;
 
   @override
   void initState() {
     super.initState();
-    _nameController.text = userName;
+    // Initialize with an empty controller; we will set its text when provider is loaded.
+    _nameController = TextEditingController();
+
+    // As soon as the provider finishes loading (isLoading==false), we'll set _nameController.text.
+    // We can listen to the provider to know when it’s done.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userProv = Provider.of<UserProvider>(context, listen: false);
+      if (!userProv.isLoading) {
+        _nameController.text = userProv.userName;
+      } else {
+        // If still loading, wait until it updates:
+        userProv.addListener(() {
+          if (!userProv.isLoading) {
+            _nameController.text = userProv.userName;
+          }
+        });
+      }
+    });
   }
 
   @override
@@ -73,10 +95,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    userName = _nameController.text;
-                  });
+                onPressed: () async {
+                  final newName = _nameController.text.trim();
+                  if (newName.isEmpty) return;
+
+                  // 1) Update UserProvider (which also writes to SharedPreferences).
+                  final userProv = Provider.of<UserProvider>(
+                    context,
+                    listen: false,
+                  );
+                  await userProv.setUserName(newName);
+
+                  // 2) Close the bottom sheet.
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
@@ -104,126 +134,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size deviceSize = MediaQuery.of(context).size;
+    // Listen to UserProvider so that whenever userName changes, this widget rebuilds.
+    return Consumer<UserProvider>(
+      builder: (context, userProv, child) {
+        // If provider is still loading, show a spinner:
+        if (userProv.isLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(
-            fontSize: 24,
-            color: kDarkPurpleColor,
-            fontWeight: FontWeight.w500,
+        final currentName = userProv.userName;
+        _nameController.text = currentName;
+
+        final deviceSize = MediaQuery.of(context).size;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Profile',
+              style: TextStyle(
+                fontSize: 24,
+                color: kDarkPurpleColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: false,
           ),
-        ),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: deviceSize.width,
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color: kPrimaryColor.withOpacity(0.4),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          "https://picsum.photos/500/500",
-                          fit: BoxFit.fill,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              PhosphorIconsBold.user,
-                              size: 40,
-                            );
-                          },
-                        ),
-                      ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                children: [
+                  // ─────────── User Info Header ───────────
+                  Container(
+                    width: deviceSize.width,
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: kPrimaryColor.withOpacity(0.4),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      userName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: kPrimaryColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(40),
-                      onTap: _showEditProfileBottomSheet,
-                      child: Container(
-                        width: 120,
-                        height: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: kPrimaryColor,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 40,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                              "https://picsum.photos/500/500",
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  PhosphorIconsBold.user,
+                                  size: 40,
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                        child: const Text(
-                          "Profile",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: kWhiteColor,
+                        const SizedBox(height: 10),
+                        Text(
+                          currentName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: kPrimaryColor,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(40),
+                          onTap: _showEditProfileBottomSheet,
+                          child: Container(
+                            width: 120,
+                            height: 40,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: kPrimaryColor,
+                            ),
+                            child: const Text(
+                              "Edit Profile",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: kWhiteColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  ProfileBtnWidget(
+                    onPressed: () {},
+                    title: 'Add Payment Methods',
+                  ),
+                  const SizedBox(height: 20),
+                  ProfileBtnWidget(
+                    onPressed: () {},
+                    title: 'My Earnings & Payout',
+                  ),
+                  const SizedBox(height: 60),
+                  ProfileBtnWidget(
+                    onPressed: () {},
+                    title: 'Manage Your Privacy Settings',
+                  ),
+                  const SizedBox(height: 20),
+                  ProfileBtnWidget(
+                    onPressed: () {},
+                    title: "FAQ's & Support",
+                  ),
+                  const SizedBox(height: 60),
+                  ProfileBtnWidget(
+                    onPressed: () {
+                      pushReplacementWithoutNavBar(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const OnboardingScreen(),
+                        ),
+                      );
+                    },
+                    title: 'Logout',
+                    isIcon: false,
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              ProfileBtnWidget(
-                onPressed: () {},
-                title: 'Add Payment Methods',
-              ),
-              const SizedBox(height: 20),
-              ProfileBtnWidget(
-                onPressed: () {},
-                title: 'My Earnings & Payout',
-              ),
-              const SizedBox(height: 60),
-              ProfileBtnWidget(
-                onPressed: () {},
-                title: 'Manage Your Privacy Settings',
-              ),
-              const SizedBox(height: 20),
-              ProfileBtnWidget(
-                onPressed: () {},
-                title: "FAQ's & Support",
-              ),
-              const SizedBox(height: 60),
-              ProfileBtnWidget(
-                onPressed: () {
-                  pushReplacementWithoutNavBar(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OnboardingScreen(),
-                    ),
-                  );
-                },
-                title: 'Logout',
-                isIcon: false,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
