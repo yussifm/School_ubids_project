@@ -268,10 +268,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           .reset();
 
                       // 2) Navigate to the onboarding screen, clearing the stack:
-                      Navigator.of(context).pushAndRemoveUntil(
+                      
+                      pushReplacementWithoutNavBar(
+                        context,
                         MaterialPageRoute(
                             builder: (_) => const OnboardingScreen()),
-                        (Route<dynamic> route) => false,
                       );
                     },
                     title: 'Logout',
