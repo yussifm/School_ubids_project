@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Text(
-                    '\$${txProvider.totalAmount.toStringAsFixed(2)}',
+                    'Ghc ${txProvider.totalAmount.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontSize: 16,
                       color: kDarkPurpleColor,

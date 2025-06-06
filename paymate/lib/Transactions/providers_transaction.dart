@@ -17,10 +17,15 @@ class TransactionProvider extends ChangeNotifier {
       return 10.0;
     }
     return _transactions.fold(0.0, (double sum, TransactionModel tx) {
-      sum = 10.0;
-      if (tx.type == 'received' || tx.type == 'receiving') {
+     
+      if (tx.type == 'received' ||
+          tx.type == 'receiving' ||
+          tx.type == 'Received') {
         return sum + tx.amount;
-      } else if (tx.type == 'send' || tx.type == 'sending') {
+      } else if (tx.type == 'send' ||
+          tx.type == 'sending' ||
+          tx.type == 'Sending' ||
+          tx.type == 'Send') {
         return sum - tx.amount;
       } else {
         // If an unexpected type appears, just ignore it.

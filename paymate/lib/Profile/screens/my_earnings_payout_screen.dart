@@ -12,11 +12,16 @@ class MyEarningsPayoutScreen extends StatelessWidget {
   const MyEarningsPayoutScreen({super.key});
 
   bool _isReceiving(TransactionModel tx) {
-    return tx.type == 'receiving' || tx.type == 'received';
+    return tx.type == 'receiving' ||
+        tx.type == 'received' ||
+        tx.type == 'Received';
   }
 
   bool _isSending(TransactionModel tx) {
-    return tx.type == 'send' || tx.type == 'sending';
+    return tx.type == 'send' ||
+        tx.type == 'sending' ||
+        tx.type == 'Sending' ||
+        tx.type == 'Send';
   }
 
   @override
